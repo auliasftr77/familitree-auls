@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Family Tree Box Structure</title>
+  <style>
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background: #edb5f8;
+      padding: 20px;
+    }
+
+    h1 { text-align: center; }
+
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input, select {
+      padding: 5px;
+      margin: 5px;
+    }
+
+    button { padding: 5px 10px; }
+
+    .tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .generation {
+      display: flex;
+      justify-content: center;
+      margin: 40px 0;
+      position: relative;
+    }
+
+    .box {
+      border: 2px solid #333;
+      border-radius: 5px;
+      padding: 10px 15px;
+      margin: 5px;
+      background: #f1d2fc;
+      min-width: 150px;
+      text-align: center;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      position: relative;
+      cursor: pointer;
+    }
+
+    /* Garis antar generasi */
+    .grandparents::after,
+    .parents::after {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      background: #333;
+    }
+
+    .children::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: #333;
+    }
+
+    .children .box::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1> Family Tree Aul's </h1>
+
+  <div class="controls">
+    <!-- Add Sibling -->
+    <input type="text" id="siblingName" placeholder="Nama saudara baru">
+    <button onclick="addSibling()">Add Sibling</button><br>
+
+    <!-- Add Person -->
+    <input type="text" id="personName" placeholder="Nama orang baru">
+    <select id="generationSelect">
+      <option value="grandparents">Kakek/Nenek</option>
+      <option value="parents">Orang Tua</option>
+      <option value="children">Anak-anak</option>
+    </select>
+    <button onclick="addPerson()">Add Person</button><br>
+
+    <!-- Delete Person -->
+    <input type="text" id="deleteName" placeholder="Nama yang dihapus">
+    <button onclick="deletePerson()">Delete Person</button>
+  </div>
+
+  <div class="tree">
+    <!-- Generasi Kakek/Nenek -->
+    <div class="generation grandparents" id="grandparents">
+      <div class="box">Mindah (Kakek/Ayah)</div>
+      <div class="box">Siti (Nenek/Ayah)</div>
+      <div class="box">Sumiarjo (Kakek/Mamah)</div>
+      <div class="box">Manisem (Nenek/Mamah)</div>
+    </div>
+
+    <!-- Generasi Orang Tua -->
+    <div class="generation parents" id="parents">
+      <div class="box">Kardi (Ayah)</div>
+      <div class="box">Sutirah (Mamah)</div>
+    </div>
+
+    <!-- Generasi Anak-anak -->
+    <div class="generation children" id="children">
+      <div class="box">Devi Rismawati (Anak pertama)</div>
+      <div class="box">Aulia Safitri (Anak kedua)</div>
+      <div class="box">Adnan Nurohman (Anak ketiga)</div>
+    </div>
+  </div>
+
+  <script>
+    function addSibling() {
+      const name = document.getElementById("siblingName").value.trim();
+      if (name !== "") {
+        const div = document.createElement("div");
+        div.className = "box";
+        div.textContent = name + " (Saudara)";
+        document.getElementById("children").appendChild(div);
+        document.getElementById("siblingName").value = "";
+      }
+    }
+
+    function addPerson() {
+      const name = document.getElementById("personName").value.trim();
+      const generation = document.getElementById("generationSelect").value;
+      if (name !== "") {
+        const div = document.createElement("div");
+        div.className = "box";
+        div.textContent = name;
+        document.getElementById(generation).appendChild(div);
+        document.getElementById("personName").value = "";
+      }
+    }
+
+    function deletePerson() {
+      const name = document.getElementById("deleteName").value.trim().toLowerCase();
+      if (name !== "") {
+        const boxes = document.querySelectorAll(".box");
+        boxes.forEach(box => {
+          if (box.textContent.toLowerCase().includes(name)) {
+            box.remove();
+          }
+        });
+        document.getElementById("deleteName").value = "";
+      }
+    }
+  </script>
+</body>
+</html>
